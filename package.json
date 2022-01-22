@@ -4,7 +4,8 @@
   "description": "An API client to read data from Liquipedia for the video game Dota",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
@@ -12,9 +13,12 @@
   },
   "keywords": [],
   "author": "Neil Armitage",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Flusaka/dota-liquipedia-api-client/issues"
   },
-  "homepage": "https://github.com/Flusaka/dota-liquipedia-api-client#readme"
+  "homepage": "https://github.com/Flusaka/dota-liquipedia-api-client#readme",
+  "devDependencies": {
+    "typescript": "^4.5.5"
+  }
 }
