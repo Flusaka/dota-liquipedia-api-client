@@ -7,6 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc"
   },
+  "files": [
+    "dist/**/*"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Flusaka/dota-liquipedia-api-client.git"
@@ -19,6 +22,11 @@
   },
   "homepage": "https://github.com/Flusaka/dota-liquipedia-api-client#readme",
   "devDependencies": {
+    "@types/node": "^17.0.10",
+    "@typescript-eslint/eslint-plugin": "^5.10.0",
+    "@typescript-eslint/parser": "^5.10.0",
+    "eslint": "^8.7.0",
     "typescript": "^4.5.5"
-  }
+  },
+  "dependencies": {}
 }
