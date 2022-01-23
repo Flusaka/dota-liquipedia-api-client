@@ -7,7 +7,10 @@
         "preserveConstEnums": true,
         "removeComments": true,
         "target": "es2016",
-        "strict": true
+        "strict": true,
+        "typeRoots": [
+            "./node_modules/@types"
+        ]
     },
     "include": [
         "src/**/*.ts"

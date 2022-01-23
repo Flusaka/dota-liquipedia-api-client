@@ -8,6 +8,15 @@ export interface IRequestOptions {
     headers: IRequestHeaders;
 }
 
+export interface IResponse {
+    parse: {
+        displaytitle: string;
+        text: {
+            "*": string;
+        }
+    }
+}
+
 export interface IRequestClient {
-    get(request: IRequestOptions): Promise<string>;
+    get(request: IRequestOptions): Promise<IResponse>;
 }
