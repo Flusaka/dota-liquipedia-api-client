@@ -2,7 +2,7 @@ export interface ITeamMember {
     nickname: string;
     fullName: string;
     joinDate: Date;
-    position: number;
+    position: string;
 }
 
 export interface ITeam {

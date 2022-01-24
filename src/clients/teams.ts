@@ -29,9 +29,26 @@ export class TeamClient implements ITeamClient {
 
     private _parseTeam(response: IResponse): ITeam {
         const htmlRoot = parse(response.parse.text['*']);
+
+        let teamRegion = '';
+        let teamCaptain: string | undefined = '';
+
+        // Parse team details
+        const teamDetails = htmlRoot.querySelectorAll('.infobox-description');
+        for (const detail of teamDetails) {
+            const detailLabel = detail.innerText;
+            const detailValue = detail.nextElementSibling.querySelector(':scope > a')?.innerText;
+            if (detailLabel == 'Region:') {
+                teamRegion = detailValue || '';
+            }
+            else if (detailLabel == 'Team Captain:') {
+                teamCaptain = detailValue;
+            }
+        }
+
+        // Parse roster
         const rosterRoot = htmlRoot.querySelector('.table-responsive > .wikitable-striped.roster-card')?.querySelectorAll('tr.Player');
         const roster: ITeamMember[] = [];
-
         if (rosterRoot) {
             for (const memberRoot of rosterRoot) {
                 const nickname = memberRoot.querySelector('.ID #player a')?.innerText;
@@ -39,18 +56,19 @@ export class TeamClient implements ITeamClient {
                 const date = memberRoot.querySelector('div.Date')?.innerText
                 const position = memberRoot.querySelector('.PositionWoTeam2')?.innerText;
                 roster.push({
-                    nickname: nickname ? nickname : '',
+                    nickname: nickname || '',
                     fullName: fullName ? this._cleanupName(fullName) : '',
                     joinDate: date ? new Date(Date.parse(date.substring(0, 10))) : new Date(),
-                    position: position ? parseInt(position) : -1
+                    position: position || ''
                 })
             }
         }
 
         return {
             name: response.parse.displaytitle,
-            region: "EU",
-            roster: roster
+            region: teamRegion,
+            roster: roster,
+            captain: teamCaptain
         };
     }
 
