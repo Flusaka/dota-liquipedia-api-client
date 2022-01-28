@@ -66,12 +66,8 @@ export class MatchClient implements IMatchClient {
             // Convert to UNIX timestamp (multiply by 1000)
             const startTimestamp = parseInt(matchTime) * 1000;
             const startTime = new Date(startTimestamp);
-            let matchStatus = MatchStatus.Upcoming;
-            if (startTimestamp < Date.now()) {
-                matchStatus = MatchStatus.Live;
-            }
 
-            matches.push({
+            const match: IMatch = {
                 homeTeam: {
                     name: homeTeamName,
                     shortName: homeTeamShortName
@@ -81,11 +77,25 @@ export class MatchClient implements IMatchClient {
                     shortName: awayTeamShortName
                 },
                 bestOf: parseInt(bestOf.slice(2)),
-                status: matchStatus,
+                status: MatchStatus.Upcoming,
                 startTime,
-                twitchStream: twitchStream?.toLowerCase().replace(/_/g, ''),
+                twitchStream: twitchStream ? `https://twitch.tv/${twitchStream.toLowerCase().replace(/_/g, '')}` : undefined,
                 tournamentName
-            })
+            };
+
+            if (startTimestamp < Date.now()) {
+                match.status = MatchStatus.Live;
+
+                // If we're live, parse the scores
+                const score = matchDetails.querySelector('.versus > div')?.textContent;
+                const scores = score?.split(':');
+                if (scores) {
+                    match.homeTeam.currentScore = parseInt(scores[0]);
+                    match.awayTeam.currentScore = parseInt(scores[1]);
+                }
+            }
+
+            matches.push(match)
         }
         return matches;
     }
