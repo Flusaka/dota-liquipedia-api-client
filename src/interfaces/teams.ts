@@ -1,11 +1,11 @@
-export interface ITeamMember {
+export type ITeamMember = {
     nickname: string;
     fullName: string;
     joinDate: Date;
     position: string;
 }
 
-export interface ITeam {
+export type ITeam = {
     name: string;
     roster: ITeamMember[];
     region: string;

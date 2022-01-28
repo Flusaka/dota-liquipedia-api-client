@@ -1,14 +1,14 @@
-export interface IRequestHeaders {
-    acceptEncoding: 'gzip';
-    userAgent: string;
+export type IRequestHeaders = {
+    acceptEncoding?: 'gzip';
+    userAgent?: string;
 }
 
-export interface IRequestOptions {
+export type IRequestOptions = {
     url: string;
     headers: IRequestHeaders;
 }
 
-export interface IResponse {
+export type IResponse = {
     parse: {
         displaytitle: string;
         text: {

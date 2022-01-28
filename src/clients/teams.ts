@@ -15,8 +15,7 @@ export class TeamClient implements ITeamClient {
             this.requestClient.get({
                 url: `https://liquipedia.net/dota2/api.php?action=parse&origin=*&format=json&page=${encodedTeamName}`,
                 headers: {
-                    acceptEncoding: 'gzip',
-                    userAgent: 'Dota Liquipedia API Client'
+                    acceptEncoding: 'gzip'
                 }
             }).then((response) => {
                 const team = this._parseTeam(response);
@@ -67,7 +66,7 @@ export class TeamClient implements ITeamClient {
         return {
             name: response.parse.displaytitle,
             region: teamRegion,
-            roster: roster,
+            roster,
             captain: teamCaptain
         };
     }
