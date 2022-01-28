@@ -63,7 +63,7 @@ export class MatchClient implements IMatchClient {
                 continue;
             }
 
-            // Convert to UNIX timestamp (multiply by 1000)
+            // Convert to millisecond-based timestamp (multiply by 1000)
             const startTimestamp = parseInt(matchTime) * 1000;
             const startTime = new Date(startTimestamp);
 
