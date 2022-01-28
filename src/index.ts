@@ -1,28 +1,35 @@
 import { MatchClient } from './clients/matches';
 import { TeamClient } from './clients/teams';
 import { AxiosRequestClient } from './common/axios_request';
+import { ITeam } from './interfaces/teams';
+import { IMatch } from './interfaces/matches';
 
-const requestClient = new AxiosRequestClient('Dota Liquipedia API Client');
-const matchesClient = new MatchClient(requestClient);
+export class DotaLiquipediaClient {
+    private requestClient: AxiosRequestClient;
+    private matchesClient: MatchClient;
+    private teamClient: TeamClient;
 
-const run = async () => {
-    const matches = await matchesClient.getMatches();
-    for (const match of matches) {
-        console.log(`[${match.startTime}][${match.status.toString()}]: ${match.homeTeam.name} vs ${match.awayTeam.name} (Best of ${match.bestOf}), Tournament: ${match.tournamentName} on Stream: ${match.twitchStream}`);
+    constructor(userAgent: string) {
+        this.requestClient = new AxiosRequestClient(userAgent);
+        this.matchesClient = new MatchClient(this.requestClient);
+        this.teamClient = new TeamClient(this.requestClient);
+    }
+
+    public getTeamByName(teamName: string): Promise<ITeam> {
+        return this.teamClient.getTeam(teamName);
+    }
+
+    public getMatches(): Promise<Array<IMatch>> {
+        return this.matchesClient.getMatches();
+    }
+
+    public getUpcomingMatches(): Promise<Array<IMatch>> {
+        return this.matchesClient.getUpcomingMatches();
+    }
+
+    public getLiveMatches(): Promise<Array<IMatch>> {
+        return this.matchesClient.getLiveMatches();
     }
 }
 
-run();
-// const teamClient = new TeamClient(requestClient);
-
-// teamClient.getTeam("Team Liquid").then(team => {
-//     console.log(team.name);
-//     console.log(team.captain);
-//     for (const member of team.roster) {
-//         console.log(`${ member.nickname } - ${ member.fullName } - ${ member.joinDate } - ${ member.position }`)
-//     }
-// }).catch(reason => {
-//     console.error(reason);
-// });
-
-export { TeamClient };
+export { MatchClient, TeamClient, ITeam, IMatch };
