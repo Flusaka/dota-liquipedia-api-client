@@ -23,10 +23,22 @@ export class MatchClient implements IMatchClient {
         });
     }
     getUpcomingMatches(): Promise<IMatch[]> {
-        throw new Error('Method not implemented.');
+        return new Promise((resolve, reject) => {
+            this.getMatches().then(matches => {
+                resolve(matches.filter(match => match.status == MatchStatus.Upcoming));
+            }).catch(reason => {
+                reject(reason);
+            });
+        });
     }
     getLiveMatches(): Promise<IMatch[]> {
-        throw new Error('Method not implemented.');
+        return new Promise((resolve, reject) => {
+            this.getMatches().then(matches => {
+                resolve(matches.filter(match => match.status == MatchStatus.Live));
+            }).catch(reason => {
+                reject(reason);
+            });
+        });
     }
 
     private _parseMatches(response: IResponse): IMatch[] {
@@ -58,6 +70,7 @@ export class MatchClient implements IMatchClient {
             if (startTimestamp < Date.now()) {
                 matchStatus = MatchStatus.Live;
             }
+
             matches.push({
                 homeTeam: {
                     name: homeTeamName,
