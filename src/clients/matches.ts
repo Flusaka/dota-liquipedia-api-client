@@ -1,6 +1,6 @@
 import { parse } from 'node-html-parser';
 import { IMatch, IMatchClient, MatchStatus } from '../interfaces/matches';
-import { IRequestClient, IResponse } from '../interfaces/request';
+import IRequestClient, { IResponse } from '../interfaces/request';
 
 export class MatchClient implements IMatchClient {
     private requestClient: IRequestClient;

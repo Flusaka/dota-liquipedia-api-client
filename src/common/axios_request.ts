@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { IRequestClient, IRequestOptions, IResponse } from '../interfaces/request';
+import IRequestClient, { IRequestOptions, IResponse } from '../interfaces/request';
 
 export class AxiosRequestClient implements IRequestClient {
     private userAgent: string;

@@ -17,6 +17,6 @@ export type IResponse = {
     }
 }
 
-export interface IRequestClient {
+export default interface IRequestClient {
     get(request: IRequestOptions): Promise<IResponse>;
 }
