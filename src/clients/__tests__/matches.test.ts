@@ -1,28 +1,24 @@
 import * as fs from 'fs';
 import { mock, mockFn } from 'jest-mock-extended';
 import { MatchClient } from '../matches';
-import IRequestClient, { IResponse } from '../../interfaces/request';
-import { IMatch, MatchStatus } from '../../interfaces/matches';
+import IRequestClient from '../../interfaces/request';
+import { MatchStatus } from '../../interfaces/matches';
 
-const matchesTestHtml = fs.readFileSync('./src/clients/__tests__/test-matches-response.html');
+const matchesTestHtml = {
+    'valid': fs.readFileSync('./src/clients/__tests__/test-matches-response.html'),
+    'invalidHomeTeam': fs.readFileSync('./src/clients/__tests__/test-matches-response-invalid-home-team.html'),
+    'invalidAwayTeam': fs.readFileSync('./src/clients/__tests__/test-matches-response-invalid-away-team.html'),
+    'invalidBestOf': fs.readFileSync('./src/clients/__tests__/test-matches-response-invalid-best-of.html'),
+    'invalidMatchTime': fs.readFileSync('./src/clients/__tests__/test-matches-response-invalid-match-time.html')
+};
 
 const mockRequestClient = mock<IRequestClient>();
-mockRequestClient.get.mockImplementation((): Promise<IResponse> => {
-    return Promise.resolve({
-        parse: {
-            displaytitle: 'Matches',
-            text: {
-                "*": matchesTestHtml.toString()
-            }
-        }
-    })
-});
 
 const matchClient = new MatchClient(mockRequestClient);
 const mockMatchClient = mock<MatchClient>({
     getLiveMatches: matchClient.getLiveMatches,
     getUpcomingMatches: matchClient.getUpcomingMatches,
-    getMatches: mockFn().mockReturnValue(Promise.resolve<IMatch[]>([
+    getMatches: mockFn().mockReturnValue(Promise.resolve([
         {
             homeTeam: {
                 name: 'Team Liquid'
@@ -47,14 +43,95 @@ const mockMatchClient = mock<MatchClient>({
 });
 
 describe('Match Client', () => {
-    test('Match Client calls get when getMatches is called', () => {
+    test('Match Client calls get on the IRequestClient when getMatches is called', () => {
         matchClient.getMatches();
         expect(mockRequestClient.get).toBeCalled();
     });
 
     test('Match Client returns correct amount of matches for valid data', async () => {
+        mockRequestClient.get.mockReturnValue(Promise.resolve({
+            parse: {
+                displaytitle: '',
+                text: {
+                    '*': matchesTestHtml['valid'].toString()
+                }
+            }
+        }));
         const matches = await matchClient.getMatches();
-        expect(matches).toHaveLength(4);
+        expect(matches).toHaveLength(1);
+    });
+
+    test('Match Client ignores match data if the home team name is missing', async () => {
+        mockRequestClient.get.mockReturnValue(Promise.resolve({
+            parse: {
+                displaytitle: '',
+                text: {
+                    '*': matchesTestHtml['invalidHomeTeam'].toString()
+                }
+            }
+        }));
+        const matches = await matchClient.getMatches();
+        expect(matches).toHaveLength(0);
+    });
+
+    test('Match Client ignores match data if the away team name is missing', async () => {
+        mockRequestClient.get.mockReturnValue(Promise.resolve({
+            parse: {
+                displaytitle: '',
+                text: {
+                    '*': matchesTestHtml['invalidAwayTeam'].toString()
+                }
+            }
+        }));
+        const matches = await matchClient.getMatches();
+        expect(matches).toHaveLength(0);
+    });
+
+    test('Match Client ignores match data if the best of value is missing', async () => {
+        mockRequestClient.get.mockReturnValue(Promise.resolve({
+            parse: {
+                displaytitle: '',
+                text: {
+                    '*': matchesTestHtml['invalidBestOf'].toString()
+                }
+            }
+        }));
+        const matches = await matchClient.getMatches();
+        expect(matches).toHaveLength(0);
+    });
+
+    test('Match Client ignores match data if the match time value is missing', async () => {
+        mockRequestClient.get.mockReturnValue(Promise.resolve({
+            parse: {
+                displaytitle: '',
+                text: {
+                    '*': matchesTestHtml['invalidMatchTime'].toString()
+                }
+            }
+        }));
+        const matches = await matchClient.getMatches();
+        expect(matches).toHaveLength(0);
+    });
+
+    test('Match Client rejects Promise if IRequestClient errors for any reason, propagating the reason upwards, when calling getMatches', () => {
+        expect.assertions(1);
+        const errorReason = "TestError";
+        mockRequestClient.get.mockReturnValue(Promise.reject(errorReason));
+        expect(matchClient.getMatches()).rejects.toEqual(errorReason);
+    });
+
+    test('Match Client rejects Promise if IRequestClient errors for any reason, propagating the reason upwards, when calling getUpcomingMatches', () => {
+        expect.assertions(1);
+        const errorReason = "TestError";
+        mockRequestClient.get.mockReturnValue(Promise.reject(errorReason));
+        expect(matchClient.getUpcomingMatches()).rejects.toEqual(errorReason);
+    });
+
+    test('Match Client rejects Promise if IRequestClient errors for any reason, propagating the reason upwards, when calling getLiveMatches', () => {
+        expect.assertions(1);
+        const errorReason = "TestError";
+        mockRequestClient.get.mockReturnValue(Promise.reject(errorReason));
+        expect(matchClient.getLiveMatches()).rejects.toEqual(errorReason);
     });
 
     test('Match Client returns only matches with status Upcoming when getUpcomingMatches is called', async () => {
