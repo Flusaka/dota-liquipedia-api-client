@@ -1,4 +1,4 @@
-import { IRequestClient, IResponse } from '../interfaces/request';
+import IRequestClient, { IResponse } from '../interfaces/request';
 import { ITeam, ITeamClient, ITeamMember } from '../interfaces/teams';
 import { parse } from 'node-html-parser';
 
