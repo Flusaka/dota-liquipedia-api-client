@@ -5,7 +5,7 @@ export type IRequestHeaders = {
 
 export type IRequestOptions = {
     url: string;
-    headers: IRequestHeaders;
+    headers?: IRequestHeaders;
 }
 
 export type IResponse = {

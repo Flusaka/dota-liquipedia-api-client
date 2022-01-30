@@ -12,8 +12,8 @@ export class AxiosRequestClient implements IRequestClient {
         return new Promise((resolve, reject) => {
             axios.get(request.url, {
                 headers: {
-                    'Accept-Encoding': request.headers.acceptEncoding || 'gzip',
-                    'User-Agent': request.headers.userAgent || this.userAgent
+                    'Accept-Encoding': request.headers?.acceptEncoding || 'gzip',
+                    'User-Agent': request.headers?.userAgent || this.userAgent
                 }
             }).then(response => {
                 resolve(response.data);
