@@ -13,10 +13,7 @@ export class TeamClient implements ITeamClient {
         return new Promise((resolve, reject) => {
             const encodedTeamName = teamName.replace(/ /g, '_');
             this.requestClient.get({
-                url: `https://liquipedia.net/dota2/api.php?action=parse&origin=*&format=json&page=${encodedTeamName}`,
-                headers: {
-                    acceptEncoding: 'gzip'
-                }
+                url: `https://liquipedia.net/dota2/api.php?action=parse&origin=*&format=json&page=${encodedTeamName}`
             }).then((response) => {
                 const team = this._parseTeam(response);
                 resolve(team);
