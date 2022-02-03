@@ -109,3 +109,11 @@ client.getLiveMatches().then(matches => {
     console.log(error);
 });
 ```
+
+## Usage Notes
+
+Please note that this uses the Dota 2 Liquipedia Wiki and you should use it in accordance with their API terms of use which you can find from (here)[https://liquipedia.net/api-terms-of-use].
+
+This library uses the "parse" actions for all calls, so you should be aware not to use these requests more than once per 30 seconds. Remember to cache results from the API calls to avoid recurring calls to the Liquipedia API.
+
+Please also don't forget to attribute the data & content you're using to Liquipedia under the CC-BY-SA 3.0 license as described (here)[https://liquipedia.net/commons/Liquipedia:Copyrights].
