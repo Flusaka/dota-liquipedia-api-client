@@ -2,13 +2,25 @@ import { parse } from 'node-html-parser';
 import { IMatch, IMatchClient, MatchStatus } from '../interfaces/matches';
 import IRequestClient, { IResponse } from '../interfaces/request';
 
+/**
+ * Client for retrieving Match data specifically
+ * @class MatchClient
+ */
 export class MatchClient implements IMatchClient {
     private requestClient: IRequestClient;
 
+    /**
+     * Create a new MatchClient
+     * @param requestClient Instance of a type of IRequestClient this will use to retrieve data from Liquipedia
+     */
     constructor(requestClient: IRequestClient) {
         this.requestClient = requestClient;
     }
 
+    /**
+     * Get all matches (live & upcoming)
+     * @returns A Promise, if successful will contain an array of IMatch objects with all details
+     */
     getMatches(): Promise<IMatch[]> {
         return new Promise((resolve, reject) => {
             this.requestClient.get({
@@ -21,6 +33,11 @@ export class MatchClient implements IMatchClient {
             });
         });
     }
+
+    /**
+     * Get all upcoming matches
+     * @returns A Promise, if successful will contain an array of IMatch objects with all details
+     */
     getUpcomingMatches(): Promise<IMatch[]> {
         return new Promise((resolve, reject) => {
             this.getMatches().then(matches => {
@@ -30,6 +47,11 @@ export class MatchClient implements IMatchClient {
             });
         });
     }
+
+    /**
+     * Get all live matches
+     * @returns A Promise, if successful will contain an array of IMatch objects with all details
+     */
     getLiveMatches(): Promise<IMatch[]> {
         return new Promise((resolve, reject) => {
             this.getMatches().then(matches => {
@@ -40,6 +62,11 @@ export class MatchClient implements IMatchClient {
         });
     }
 
+    /**
+     * Parses the HTML response from Liquipedia into an array of IMatch objects
+     * @param response The response object from the Liquipedia server, containing the HTML to parse
+     * @returns An array of IMatch objects populated with details parsed from the HTML
+     */
     private _parseMatches(response: IResponse): IMatch[] {
         const htmlRoot = parse(response.parse.text['*']);
         const matchDetailBoxes = htmlRoot.querySelectorAll('.infobox_matches_content');
