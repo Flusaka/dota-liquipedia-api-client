@@ -1,5 +1,5 @@
 export type IRequestHeaders = {
-    acceptEncoding?: 'gzip';
+    acceptEncoding?: 'gzip' | 'compress' | 'deflate' | 'br' | 'identity' | '*';
     userAgent?: string;
 }
 
