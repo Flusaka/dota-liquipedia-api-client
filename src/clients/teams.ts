@@ -27,7 +27,7 @@ export class TeamClient implements ITeamClient {
         const htmlRoot = parse(response.parse.text['*']);
 
         let teamRegion = '';
-        let teamCaptain: string | undefined = '';
+        let teamCaptain: string | undefined;
 
         // Parse team details
         const teamDetails = htmlRoot.querySelectorAll('.infobox-description');
